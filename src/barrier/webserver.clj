@@ -1,6 +1,7 @@
 (ns barrier.webserver
   (:require [com.stuartsierra.component :as component]
-            [org.httpkit.server :refer [run-server]]))
+            [org.httpkit.server :refer [run-server]]
+            [spiral.adapters.http-kit :refer [to-httpkit]]))
 
 (defrecord WebServer [ip port threads worker-name-prefix max-body max-line app]
   component/Lifecycle
@@ -14,7 +15,7 @@
                    :max-line max-line}]
       (println "Starting web server on" (str ip ":" port))
       (println "Starting web server with app" app)
-      (assoc component :server (run-server handler options)
+      (assoc component :server (run-server (to-httpkit handler) options)
                        :engine "org.httpkit.server")))
   (stop [component]
     (println "Stopping web server")
