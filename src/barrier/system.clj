@@ -1,8 +1,11 @@
 (ns barrier.system
   (:require [com.stuartsierra.component :as component]
+            [barrier.app :as app]
             [barrier.webserver :as webserver]))
 
-(def default-webserver-options
+(def app-config {})
+
+(def webserver-config
   {:ip "0.0.0.0"
    :port 8090
    :threads 4
@@ -12,4 +15,7 @@
 
 (defn new-system []
   (component/system-map
-   :webserver (webserver/new-webserver default-webserver-options)))
+    :app (app/new-app app-config)
+    :webserver (component/using
+                 (webserver/new-webserver webserver-config)
+                 [:app])))
