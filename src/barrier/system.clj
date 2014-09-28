@@ -1,6 +1,7 @@
 (ns barrier.system
   (:require [com.stuartsierra.component :as component]
             [barrier.app :as app]
+            [barrier.backends :as backends]
             [barrier.webserver :as webserver]))
 
 (def app-config {})
@@ -15,7 +16,10 @@
 
 (defn new-system []
   (component/system-map
-    :app (app/new-app app-config)
+    :backends (backends/new-backends {})
+    :app (component/using
+           (app/new-app app-config)
+           [:backends])
     :webserver (component/using
                  (webserver/new-webserver webserver-config)
                  [:app])))

@@ -1,8 +1,10 @@
 (ns barrier.app
-  (:require [com.stuartsierra.component :as component]
-            [compojure.core :refer (defroutes GET ANY)]
-            [spiral.core :as spiral]
-            [spiral.beauty :refer (beauty-router beauty-route)]))
+  (:require
+    [barrier.backends :as backends]
+    [com.stuartsierra.component :as component]
+    [compojure.core :refer (defroutes GET ANY)]
+    [spiral.core :as spiral]
+    [spiral.beauty :refer (beauty-router beauty-route)]))
 
 (def default-pools
   {:main {:parallelism 1}
@@ -17,7 +19,7 @@
 (defn create-beauty-router [component]
   (beauty-router barrier-routes default-pools))
 
-(defrecord App []
+(defrecord App [backends]
   component/Lifecycle
   (start [component]
     (println "Starting app")
