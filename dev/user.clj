@@ -1,8 +1,10 @@
 (ns user
   (:require
-   [com.stuartsierra.component :as component]
+   [barrier.backends :as backends]
+   [barrier.system :refer (new-system)]
    [clojure.tools.namespace.repl :refer (refresh refresh-all)]
-   [barrier.system :refer (new-system)]))
+   [com.stuartsierra.component :as component]
+   [schema.core :as s]))
 
 (def system nil)
 
