@@ -7,6 +7,7 @@
                  [com.stuartsierra/component "0.2.1"]
                  [compojure "1.1.9"]
                  [http-kit "2.1.16"]
+                 [prismatic/schema "0.3.0"]
 
                  ;; spiral dependencies
                  [org.clojure/tools.logging "0.2.6"]
