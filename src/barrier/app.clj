@@ -1,23 +1,27 @@
 (ns barrier.app
   (:require [com.stuartsierra.component :as component]
-            [spiral.core :as spiral]))
+            [compojure.core :refer (defroutes GET ANY)]
+            [spiral.core :as spiral]
+            [spiral.beauty :refer (beauty-router beauty-route)]))
 
-(defn get-ring-handler [component]
-  (fn [req] {:status  200
-             :headers {"Content-Type" "text/html"}
-             :body    "Hello Ring App!!!"}))
+(def default-pools
+  {:main {:parallelism 1}
+   :endpoint {:parallelism 5
+              :buffer-size 100}})
 
-(defn get-spiral-handler [component]
-  (spiral/constant-response
-    {:status 200
-     :headers {"Content-Type" "text/html"}
-     :body "Hello Spiral App!!!"}))
+(defroutes barrier-routes
+  (GET "/" [] (beauty-route :main {:status 200
+                                   :headers {"Content-Type" "text/html"}
+                                   :body "Hello Barrier!!!"})))
+
+(defn create-beauty-router [component]
+  (beauty-router barrier-routes default-pools))
 
 (defrecord App []
   component/Lifecycle
   (start [component]
     (println "Starting app")
-    (assoc component :handler (get-spiral-handler component)))
+    (assoc component :handler (create-beauty-router component)))
   (stop [component]
     (println "Stopping app")
     (dissoc component :handler :ring-type)))
